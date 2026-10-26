@@ -14,6 +14,12 @@ if not exist "%~dp0venv\Scripts\activate.bat" (
 
 echo Building frontend...
 cd "%~dp0frontend"
+call npm install
+if errorlevel 1 (
+    echo ERROR: npm install failed!
+    pause
+    exit /b 1
+)
 call npm run build
 if errorlevel 1 (
     echo ERROR: Frontend build failed!

@@ -268,6 +268,20 @@ if errorlevel 1 (
 )
 
 echo.
+echo [Bonus] Installing frontend (npm) dependencies...
+cd "%~dp0frontend"
+call npm install
+if errorlevel 1 (
+    echo.
+    echo       WARNING: npm install failed. You can run 'npm install' manually in the frontend\ folder.
+    echo       The app will attempt to install dependencies again on next run.
+    pause
+) else (
+    echo       [OK] Frontend dependencies installed.
+)
+cd "%~dp0"
+
+echo.
 echo ============================================
 echo   SETUP COMPLETE!
 echo ============================================
