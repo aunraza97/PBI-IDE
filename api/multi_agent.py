@@ -1530,7 +1530,7 @@ async def chat_endpoint_multi_agent(req):
 
 
 
-                    "CRITICAL: When summarizing or analyzing a model, NEVER just dump raw database stats or metadata. To get the report/PBIX name, use `connection_operations` GetConnection or ListConnections to read the actual instance name. Then use `model_operations` Get for model identity, `table_operations` List for tables and `measure_operations` List for measures. Present the summary in plain, everyday language: the report/PBIX name, the tables inside, and the key measures. Do NOT use technical jargon like compatibility level, processing timestamps, estimated size, GUIDs, or internal model IDs. Example: 'You are connected to the Sales Report. It has 4 tables — Sales, Customers, Products, and Calendar — and 6 measures including Total Revenue and Profit Margin.'\n"
+                    "CRITICAL: When summarizing or analyzing a model, NEVER just dump raw database stats or metadata. First use `connection_operations` (GetConnection or ListConnections) to read the actual report/PBIX instance name — this is the user-facing name to show. Then use `model_operations` Get only for model identity (NOT the display name — the internal model name is often just 'Model'). Then use `table_operations` List for tables and `measure_operations` List for measures. Present the summary in plain, everyday language using the connection/PBIX name: the report name, the tables inside, and the key measures. Do NOT use technical jargon like compatibility level, processing timestamps, estimated size, GUIDs, or internal model IDs. Example: 'You are connected to the Sales Report. It has 4 tables — Sales, Customers, Products, and Calendar — and 6 measures including Total Revenue and Profit Margin.'\n"
 
 
 
