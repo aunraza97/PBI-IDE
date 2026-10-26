@@ -1234,7 +1234,7 @@ async def chat_endpoint_multi_agent(req):
 
 
 
-                    response_match = re.search(r'"response"\s*:\s*"(.*?)"\s*[,}]', manager_output, re.DOTALL)
+                    response_match = re.search(r'"response"\s*:\s*"(.*)', manager_output, re.DOTALL)
 
 
 
@@ -1251,6 +1251,16 @@ async def chat_endpoint_multi_agent(req):
 
 
                     response_val = response_match.group(1) if response_match else manager_output.strip()
+                    if response_match:
+                        response_val = response_match.group(1)
+                        response_val = response_val.rstrip()
+                        if response_val.endswith('"'):
+                            response_val = response_val[:-1]
+                        if response_val.endswith('}'):
+                            response_val = response_val[:-1]
+                        if response_val.endswith(','):
+                            response_val = response_val[:-1]
+                        response_val = response_val.strip()
 
 
 
@@ -1366,7 +1376,7 @@ async def chat_endpoint_multi_agent(req):
 
 
 
-                "1. Intent: 'Analyze', 'Summarize', 'Review', 'Read schema', 'Get model', 'what model is connected', 'connected models' -> Tool: `model_operations` (Operation: Get) to read the model identity, then `table_operations` (Operation: List) for tables and `measure_operations` (Operation: List) for measures.\n"
+                "1. Intent: 'Analyze', 'Summarize', 'Review', 'Read schema', 'Get model', 'what model is connected', 'connected models', 'report name' -> Tool: `connection_operations` (Operation: GetConnection or ListConnections) to read the actual instance/PBIX name, then `model_operations` (Operation: Get) for model identity, `table_operations` (Operation: List) for tables and `measure_operations` (Operation: List) for measures.\n"
 
 
 
@@ -1520,7 +1530,7 @@ async def chat_endpoint_multi_agent(req):
 
 
 
-                    "CRITICAL: When summarizing or analyzing a model, NEVER just dump raw database stats or metadata. You MUST use model_operations Get to read the model identity, then table_operations List for tables and measure_operations List for measures. Present the summary in plain, everyday language: the report/PBIX name, the tables inside, and the key measures. Do NOT use technical jargon like compatibility level, processing timestamps, estimated size, GUIDs, or internal model IDs. Example: 'You are connected to the Sales Report. It has 4 tables — Sales, Customers, Products, and Calendar — and 6 measures including Total Revenue and Profit Margin.'\n"
+                    "CRITICAL: When summarizing or analyzing a model, NEVER just dump raw database stats or metadata. To get the report/PBIX name, use `connection_operations` GetConnection or ListConnections to read the actual instance name. Then use `model_operations` Get for model identity, `table_operations` List for tables and `measure_operations` List for measures. Present the summary in plain, everyday language: the report/PBIX name, the tables inside, and the key measures. Do NOT use technical jargon like compatibility level, processing timestamps, estimated size, GUIDs, or internal model IDs. Example: 'You are connected to the Sales Report. It has 4 tables — Sales, Customers, Products, and Calendar — and 6 measures including Total Revenue and Profit Margin.'\n"
 
 
 
@@ -1605,7 +1615,7 @@ async def chat_endpoint_multi_agent(req):
 
 
 
-                allowed_tools = ["table_operations", "column_operations", "relationship_operations", "database_operations", "model_operations", "named_expression_operations", "generate_semantic_model", "list_folder_files", "read_file_headers"]
+                allowed_tools = ["table_operations", "column_operations", "relationship_operations", "database_operations", "model_operations", "connection_operations", "named_expression_operations", "generate_semantic_model", "list_folder_files", "read_file_headers"]
 
 
 
